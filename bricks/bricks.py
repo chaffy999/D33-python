@@ -6,43 +6,45 @@
 from rich.traceback import install
 install()
 
-
-
 import aiohttp
 import aiohttp_cors
 
-
-
 from aiohttp import web
 
+def create_and_config_api():
 
+  # ----------------------------------------
+  # Create Application with Middlewares
+  app = web.Application(
+    middlewares=[
+      # authMiddleware #authentification
+    ],
+    client_max_size=1024**3
+  )
 
-# Create Application with Middlewares
-app = web.Application(
-  middlewares=[
-    # authMiddleware #authentification
-  ],
-  client_max_size=1024**3
-)
+  # Configure CORS on all routes.
+  cors = aiohttp_cors.setup(app, defaults={
+    "*": aiohttp_cors.ResourceOptions(
+      # allow_credentials=True,
+      expose_headers="*",
+      allow_headers="*",
+    )
+  })
+  for route in list(app.router.routes()):
+    print(route)
+    cors.add(route)
+  # ----------------------------------------
+  return app
 
+app = create_and_config_api()
+
+# ----------------------------------------
+# add sub_apps
 from echo import app_echo
-
 app.add_subapp('/echo', app_echo)
 
-# Configure CORS on all routes.
-cors = aiohttp_cors.setup(app, defaults={
-  "*": aiohttp_cors.ResourceOptions(
-    # allow_credentials=True,
-    expose_headers="*",
-    allow_headers="*",
-  )
-})
-
-
-for route in list(app.router.routes()):
-  print(route)
-  cors.add(route)
-
+from tick import app_tick
+app.add_subapp('/tick', app_tick)
 
 
 if __name__ == '__main__':
