@@ -46,6 +46,9 @@ app.add_subapp('/echo', app_echo)
 from tick import app_tick
 app.add_subapp('/tick', app_tick)
 
+from graph import app_ticker
+app.add_subapp('/graph', app_ticker)
+
 
 if __name__ == '__main__':
   web.run_app(app, port=8000)
