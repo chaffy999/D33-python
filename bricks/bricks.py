@@ -49,6 +49,9 @@ app.add_subapp('/tick', app_tick)
 from graph import app_ticker
 app.add_subapp('/graph', app_ticker)
 
+from plot import app_ticker_plot
+app.add_subapp('/plot', app_ticker_plot)
+
 
 if __name__ == '__main__':
   web.run_app(app, port=8000)
